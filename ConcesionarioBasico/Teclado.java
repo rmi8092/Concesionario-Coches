@@ -1,4 +1,4 @@
-package examenObjetosEstructuras;
+package concesionarioCochesConExcepciones;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
