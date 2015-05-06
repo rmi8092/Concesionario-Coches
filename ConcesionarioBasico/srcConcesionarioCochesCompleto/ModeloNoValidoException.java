@@ -1,7 +1,7 @@
 /**
  * Paquete contenedor de las clases Coche, Color, Concesionario, Marca, y Modelo.
  */
-package concesionarioCochesConExcepciones;
+package concesionarioCochesCompleto;
 
 /**
  * Excepción lanzada en el caso de que el modelo del coche no sea valido.

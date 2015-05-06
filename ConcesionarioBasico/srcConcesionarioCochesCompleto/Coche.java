@@ -1,7 +1,7 @@
 /**
  * Paquete contenedor de las clases Coche, Color, Concesionario, Marca, y Modelo.
  */
-package concesionarioCochesConExcepciones;
+package concesionarioCochesCompleto;
 
 import java.io.Serializable;
 import java.util.regex.Pattern;

@@ -1,7 +1,7 @@
 /**
  * Paquete contenedor de las clases Coche, Color, Concesionario, Marca, y Modelo.
  */
-package concesionarioCochesConExcepciones;
+package concesionarioCochesCompleto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -74,10 +74,6 @@ public class Concesionario implements Serializable{
 			return almacen.get(index);
 		}
 		throw new CocheNoExisteException("El coche no existe en su concesionario");
-	}
-	
-	ArrayList<Coche> getLista() {
-		return almacen;
 	}
 
 	public Coche get(int index) {

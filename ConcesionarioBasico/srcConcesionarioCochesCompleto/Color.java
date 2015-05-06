@@ -1,7 +1,7 @@
 /**
  * Paquete contenedor de las clases Coche, Color, Concesionario, Marca, y Modelo.
  */
-package concesionarioCochesConExcepciones;
+package concesionarioCochesCompleto;
 
 /**
  * Enumeraci&oacute;n Color
