@@ -23,7 +23,9 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-
+/**
+ * Clase VentanaPadre.
+ */
 public class VentanaPadre extends JDialog {
 
 	protected final JPanel contenedor = new JPanel();
@@ -45,22 +47,10 @@ public class VentanaPadre extends JDialog {
 	protected JButton botonSalir;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			VentanaPadre dialog = new VentanaPadre();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * Create the dialog.
 	 */
 	public VentanaPadre() {
+		setModal(true);
 		setBounds(100, 100, 450, 251);
 		getContentPane().setLayout(new BorderLayout());
 		contenedor.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -129,7 +119,6 @@ public class VentanaPadre extends JDialog {
 			botoneraInferior.add(botonPosterior);
 			{
 				botonAccion = new JButton("Acci\u00F3n");
-				//botonAccion.setActionCommand("OK");
 				botoneraInferior.add(botonAccion);
 				getRootPane().setDefaultButton(botonAccion);
 			}
@@ -140,7 +129,6 @@ public class VentanaPadre extends JDialog {
 						setVisible(false);
 					}
 				});
-				//botonSalir.setActionCommand("Cancel");
 				botoneraInferior.add(botonSalir);
 			}
 		}

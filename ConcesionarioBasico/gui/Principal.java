@@ -1,5 +1,6 @@
 /**
  * Paquete contenedor de las clases que implementan la interfaz gr&aacute;fica.
+ * @author Rafa Miranda Ibanez
  */
 package gui;
 
@@ -120,11 +121,7 @@ public class Principal {
 	 * Campo mntmAcercaDe.
 	 */
 	private JMenuItem mntmAcercaDe;
-	/**
-	 * Archivo selecci&oacute;n.
-	 */
-	static File seleccion;
-	/**
+		/**
 	 * Objeto concesionario.
 	 */
 	static Concesionario concesionario = new Concesionario();
@@ -163,11 +160,27 @@ public class Principal {
 	/**
 	 * Campo guardado.
 	 */
-	private static boolean guardado;
+	static boolean guardado;
+	/**
+	 * Campo selecci&oacute;n.
+	 */
+	static File seleccion;
 	/**
 	 * Campo parentComponent.
 	 */
 	private static Component parentComponent;
+	/**
+	 * Objeto nuevoArchivo.
+	 */
+	private Nuevo nuevoArchivo;
+	/**
+	 * Campo verAyuda.
+	 */
+	private VerAyuda verAyuda;
+	/**
+	 * Campo modificado.
+	 */
+	protected static boolean modificado = false;
 
 	/**
 	 * Main de la aplicación.
@@ -211,9 +224,18 @@ public class Principal {
 		mntmNuevo = new JMenuItem("Nuevo");
 		mntmNuevo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				nuevoArchivo();
+				if(guardado){
+					Nuevo.crearNuevoConcesionario();
+					frame.setTitle("Sin titulo");
+				}
+				else{
+					Nuevo nuevo = new Nuevo();
+					frame.setTitle("Sin titulo");
+					nuevo.setVisible(true);
+				}
 			}
 		});
+		
 		mntmNuevo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
 		mnFicheros.add(mntmNuevo);
 		
@@ -221,7 +243,6 @@ public class Principal {
 		mntmAbrir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				abrirArchivo();
-				mostrarCompleto();
 			}
 		});
 		mnFicheros.add(mntmAbrir);
@@ -253,7 +274,12 @@ public class Principal {
 		mntmSalir = new JMenuItem("Salir");
 		mntmSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.exit(0);
+				int eleccion = JOptionPane.showConfirmDialog(parentComponent, "Confirma que desea salir del programa?",
+						"Salir", JOptionPane.YES_NO_OPTION);
+				if(eleccion == JOptionPane.YES_OPTION)
+					System.exit(0);
+				else
+					return;
 			}
 		});
 		mnFicheros.add(mntmSalir);
@@ -266,6 +292,8 @@ public class Principal {
 		mntmAadir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				annadirCoche();
+				modificado = true;
+				guardado = false;
 			}
 		});
 		mnCoches.add(mntmAadir);
@@ -274,6 +302,8 @@ public class Principal {
 		mntmEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				eliminar();
+				modificado = true;
+				guardado = false;
 			}
 		});
 		mnCoches.add(mntmEliminar);
@@ -326,8 +356,7 @@ public class Principal {
 		mntmVerAyuda = new JMenuItem("Ver Ayuda");
 		mntmVerAyuda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(parentComponent,
-						"Consultar en la siguiente URL: file:///C:/Users/rafael/ProgramacionPrimeroDaw/GUI/doc/index.html");
+				verAyuda();
 			}
 		});
 		mntmVerAyuda.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.ALT_MASK));
@@ -347,7 +376,7 @@ public class Principal {
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("");
-		Image img= new ImageIcon(this.getClass().getResource("/8.png")).getImage();
+		Image img= new ImageIcon(this.getClass().getResource("/images/8.png")).getImage();
 		lblNewLabel.setIcon(new ImageIcon(img));
 		lblNewLabel.setBounds(0, 0, 639, 345);
 		frame.getContentPane().add(lblNewLabel);
@@ -404,47 +433,20 @@ public class Principal {
 		contarCoches = new ContarCoches(concesionario);
 		contarCoches.setVisible(true);
 	}
-	
-	/**
-	 * M&eacute;todo que rellena los campos y botonera con las caracter&iacute;sticas del coche que responde a una matr&iacute;cula especificada.
-	 */
-	protected void nuevoArchivo() {
-		if(sobrescribirFichero()){
-			guardado=false;
-			crearNuevoConcesionario();
-			return;
-		}
-		if(quieresGuardar()){
-			if(guardado){
-				try {
-					if(sobrescribirFichero()){ 
-						AccionFichero.guardarComoFichero(concesionario, seleccion);
-						crearNuevoConcesionario();
-					}
-				} catch (IOException e) {
-					JOptionPane.showMessageDialog(parentComponent, e, "Error.", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-			else {
-				GuardarComo guardarComo= new GuardarComo();
-				try {
-					AccionFichero.guardarComoFichero(concesionario, seleccion);
-					crearNuevoConcesionario();
-				} catch (IOException e) {
-					JOptionPane.showMessageDialog(parentComponent, e, "Error.", JOptionPane.ERROR_MESSAGE);
-				}
-			}	
-		}
-	}
-	
+		
 	/**
 	 * M&eacute;todo que abre un archivo ya guardado previamente.
 	 */
 	protected void abrirArchivo() {
 		try {
 			AbrirArchivo abrir= new AbrirArchivo();
+			if(seleccion == null)
+				return;
+			else {
 			concesionario=(Concesionario)AccionFichero.abrirFichero(seleccion);
+			frame.setTitle(seleccion.getName());
 			guardado=true;
+			}
 		} catch(ClassNotFoundException | IOException e1){
 			JOptionPane.showMessageDialog(parentComponent, e1, "Error.", JOptionPane.ERROR_MESSAGE);
 		}
@@ -458,6 +460,7 @@ public class Principal {
 		try {
 			if(seleccion != null){
 				AccionFichero.guardarComoFichero(concesionario, seleccion);
+				frame.setTitle(seleccion.getName());
 				guardado=true;
 			}
 			else
@@ -473,8 +476,8 @@ public class Principal {
 	protected void guardar() {
 		if(guardado){
 			try {
-				if(sobrescribirFichero())
-					AccionFichero.guardarComoFichero(concesionario, seleccion);
+				AccionFichero.guardarComoFichero(concesionario, seleccion);
+				frame.setTitle(seleccion.getName());
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(parentComponent, e, "Error.", JOptionPane.ERROR_MESSAGE);
 			}
@@ -484,6 +487,7 @@ public class Principal {
 			try {
 				if(seleccion != null){
 					AccionFichero.guardarComoFichero(concesionario, seleccion);
+					frame.setTitle(seleccion.getName());
 					guardado=true;
 				}
 				else
@@ -495,44 +499,19 @@ public class Principal {
 	}
 		
 	/**
-	 * M&eacute;todo que advierte de la posibilidad de machacar información no guardada.
-	 */
-	private static boolean sobrescribirFichero() {
-		int eleccion = JOptionPane.showConfirmDialog(parentComponent, "Puede que se pierda información (en el caso de que tuviera un archivo abierto)."
-				+ " Aún así desea continuar?",
-				"Sobrescritura", JOptionPane.YES_NO_OPTION);
-		if(eleccion == JOptionPane.YES_OPTION)
-			return true;
-		else
-			return false;
-	}
-	
-	/**
-	 * M&eacute;todo que crea un nuevo concesionario.
-	 */
-	private static void crearNuevoConcesionario() {
-		concesionario = new Concesionario();
-		JOptionPane.showMessageDialog(parentComponent, "Se ha creado un nuevo concesionario");
-		guardado = false;
-	}
-	
-	/**
-	 * M&eacute;todo que ofrece la posibilidad de guardar o no un concesionario antes de crear otro.
-	 */
-	private static boolean quieresGuardar() {
-		int eleccion = JOptionPane.showConfirmDialog(parentComponent, "Quieres guardar el fichero creado previamente antes de crear un concesionario nuevo?",
-				"Sobrescritura", JOptionPane.YES_NO_OPTION);
-		if(eleccion == JOptionPane.YES_OPTION)
-			return true;
-		else
-			return false;
-	}
-
-	/**
 	 * M&eacute;todo que crea y hace visible la interfaz gr&aacute;fica que ofrece informaci&oacute;n y ayuda sobre la aplicaci&oacute;n.
 	 */
 	protected void acercaDe() {
 		acercaDe = new AcercaDe();
 		acercaDe.setVisible(true);
 	}
+	
+	/**
+	 * M&eacute;todo que crea y hace visible la interfaz gr&aacute;fica que ofrece informaci&oacute;n y ayuda sobre la aplicaci&oacute;n.
+	 */
+	protected void verAyuda() {
+		verAyuda = new VerAyuda();
+		verAyuda.setVisible(true);
+	}
+
 }

@@ -6,16 +6,20 @@ package gui;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+
+import concesionarioCochesCompleto.Coche;
 import concesionarioCochesCompleto.Color;
 import concesionarioCochesCompleto.Concesionario;
 import concesionarioCochesCompleto.Marca;
 import concesionarioCochesCompleto.Modelo;
+
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-//import java.awt.Color;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 /**
  * Clase Annadir.
@@ -27,6 +31,16 @@ public class Annadir extends VentanaPadre {
 	 */
 	public Annadir(Concesionario concesionario) {
 		super();
+		datoMatricula.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				if(!Coche.esValida(datoMatricula.getText()))
+					datoMatricula.setForeground(java.awt.Color.RED);
+				else
+					datoMatricula.setForeground(java.awt.Color.BLACK);
+			}
+		});
+		setModal(true);
 		comboBoxMarca.setModel(new DefaultComboBoxModel(Marca.values()));
 		botonAccion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -34,7 +48,6 @@ public class Annadir extends VentanaPadre {
 					Principal.concesionario.annadir(datoMatricula.getText(), getColor(),
 							(Modelo) comboBoxModelo.getSelectedItem());
 					datoMatricula.setForeground(java.awt.Color.BLACK);
-						JOptionPane.showMessageDialog(contenedor, "Has añadido un nuevo coche.");
 				} catch (Exception e1) {
 					datoMatricula.setForeground(java.awt.Color.RED);
 					JOptionPane.showMessageDialog(contenedor, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

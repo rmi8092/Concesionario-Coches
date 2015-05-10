@@ -57,7 +57,7 @@ public class Coche implements Serializable{
 	 * @param matr&iacute;cula Matr&iacute;cula del coche.
 	 * @return true si la matr&iacute;cula es v&aacute;lida, false si no lo es.
 	 */
-	private static boolean esValida(String matricula) {
+	public static boolean esValida(String matricula) {
 		return patternMatricula.matcher(matricula).matches();
 	}
 

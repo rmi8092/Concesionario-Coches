@@ -1,3 +1,6 @@
+/**
+ * Paquete contenedor de las clases que implementan la interfaz gr&aacute;fica.
+ */
 package gui;
 
 import concesionarioCochesCompleto.Coche;
@@ -9,6 +12,9 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
+/**
+ * Clase SeleccionaColor.
+ */
 public class SeleccionarColor extends VentanaPadre {
 
 	private BuscarPorColor buscarPorColor;

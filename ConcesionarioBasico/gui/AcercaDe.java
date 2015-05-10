@@ -71,7 +71,7 @@ public class AcercaDe extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						System.exit(0);
+						setVisible(false);
 					}
 				});
 				okButton.setActionCommand("OK");
