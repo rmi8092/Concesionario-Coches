@@ -14,6 +14,7 @@ import java.io.ObjectOutputStream;
 
 /**
  * Clase AccionFichero.
+ * Prueba de colaboración. Emanuel Galván.
  */
 public class AccionFichero {
 	/**
